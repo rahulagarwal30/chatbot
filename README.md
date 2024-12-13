@@ -6,4 +6,5 @@ Todo:
 2. Store text
 3. Text to Vector
 4. Vector matching with query
-5. Respond
+5. Send the matcha and query to generate answer
+6. Respond
