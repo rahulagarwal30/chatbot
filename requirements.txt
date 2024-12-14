@@ -1,0 +1,29 @@
+# Web Framework and Extensions
+Flask==3.0.2
+Flask-CORS==4.0.0
+gunicorn==21.2.0
+
+# AI and Machine Learning
+sentence-transformers==2.5.1
+--find-links https://download.pytorch.org/whl/torch_stable.html
+torch==2.1.0+cpu
+openai==1.12.0
+
+# Elasticsearch
+elasticsearch==8.11.1
+
+# Real-time Updates
+pusher==3.3.2
+
+# HTTP Requests
+requests==2.31.0
+
+# XML Processing (for sitemap)
+lxml==5.1.0
+
+# Utilities
+python-dotenv==1.0.1
+numpy==1.26.4
+
+# Optional Development Dependencies
+pytest==8.0.2 
