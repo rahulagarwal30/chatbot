@@ -23,8 +23,10 @@ A robust web crawler designed to process sitemaps, extract content, and index it
 
 1. Clone the repository:
 
+    ```bash
     git clone git@github.com:rahulagarwal30/chatbot.git
     cd chatbot
+    ```
 
 2. Create and activate a virtual environment (recommended):
 
