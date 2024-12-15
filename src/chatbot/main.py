@@ -29,6 +29,11 @@ def search():
         # Get search results
         search_results = perform_vector_search(query)
         
+        #print url from all the search results
+        for result in search_results:
+            print(f"\nURL: {result['_source']['url']}")
+            
+
         # Combine content from top results
         combined_content = ""
         for i, hit in enumerate(search_results, 1):
@@ -38,15 +43,26 @@ def search():
         # Get answer from OpenAI
         answer = get_answer_from_openai(query, combined_content)
         
+        #print for debugging answer
+        print(f"\nAnswer: {answer}")
+        
         # Send answer through Pusher
         send_message(answer)
         
         return jsonify({'message': 'Search request processed successfully'})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        # Add more detailed error logging
+        print(f"Error details: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'error': str(e),
+            'error_type': type(e).__name__,
+            'details': traceback.format_exc()
+        }), 500
 
 def run_server():
-    app.run(port=5000)
+    app.run(host='0.0.0.0', port=5001)
 
 if __name__ == '__main__':
     run_server() 
