@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
 # Create non-root user
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 
-# Set working directory to where the src directory will be
+# Set working directory
 WORKDIR /app/src
 
 # Copy requirements first to leverage Docker cache
@@ -20,6 +20,10 @@ RUN pip install --no-cache-dir -r /app/requirements.txt \
 # Copy the application files
 COPY src/ .
 COPY README.md /app/
+
+# Create startup script
+COPY startup.sh /app/
+RUN chmod +x /app/startup.sh
 
 # Change ownership to non-root user
 RUN chown -R appuser:appuser /app
@@ -33,9 +37,10 @@ EXPOSE 5000
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONPATH=/app/src
 
 # Add healthcheck
 HEALTHCHECK CMD curl --fail http://localhost:5000/ || exit 1
 
-# Run the application using gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"] 
+# Run the startup script
+CMD ["/app/startup.sh"] 
