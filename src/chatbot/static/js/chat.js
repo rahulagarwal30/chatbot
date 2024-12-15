@@ -10,6 +10,10 @@ var channel = pusher_subscriber.subscribe('my-channel');
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', function() {
     const messagesContainer = document.querySelector('.chat-messages');
+    const messageInput = document.getElementById('message-input');
+    
+    // Focus input field when page loads
+    messageInput.focus();
     
     channel.bind('event-bot-response', function(data) {
         // Create new message element
@@ -28,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('send-button').addEventListener('click', sendMessage);
     
     // Handle enter key press
-    document.getElementById('message-input').addEventListener('keypress', function(e) {
+    messageInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             sendMessage();
         }
@@ -60,8 +64,9 @@ function sendMessage() {
             })
         });
         
-        // Clear input
+        // Clear input and refocus
         input.value = '';
+        input.focus();
         
         // Scroll to bottom
         messagesContainer.scrollTop = messagesContainer.scrollHeight;

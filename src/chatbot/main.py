@@ -30,8 +30,8 @@ def search():
         search_results = perform_vector_search(query)
         
         #print url from all the search results
-        for result in search_results:
-            print(f"\nURL: {result['_source']['url']}")
+        #for result in search_results:
+        #    print(f"\nURL: {result['_source']['url']}")
             
 
         # Combine content from top results
