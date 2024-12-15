@@ -1,5 +1,4 @@
 import os
-import time
 import requests
 from src.crawler.html_cleaner import clean_html_content
 from elasticsearch import Elasticsearch
@@ -19,13 +18,11 @@ def save_and_index_url_content(url, index):
     
     should_fetch = True
     if os.path.exists(content_filename) and os.path.exists(url_filename):
-        file_age = time.time() - os.path.getmtime(content_filename)
-        
         with open(url_filename, 'r', encoding='utf-8') as f:
             stored_url = f.read().strip()
             
-        if url == stored_url and file_age < FILE_AGE_DAYS * 24 * 3600:
-            print(f"Skipping {url} - content is less than {FILE_AGE_DAYS} days old")
+        if url == stored_url:
+            print(f"Skipping {url} - content already exists")
             should_fetch = False
     
     if should_fetch:
@@ -49,8 +46,7 @@ def save_and_index_url_content(url, index):
             doc = {
                 'url': url,
                 'content': cleaned_content,
-                'content_vector': vector.tolist(),
-                'timestamp': time.time()
+                'content_vector': vector.tolist()
             }
             
             es.index(index='url_content', id=str(index), document=doc)

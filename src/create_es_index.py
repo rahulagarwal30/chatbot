@@ -12,8 +12,7 @@ mapping = {
                 "dims": 384,  # Dimension of all-MiniLM-L6-v2 embeddings
                 "index": True,
                 "similarity": "cosine"
-            },
-            "timestamp": {"type": "date"}
+            }
         }
     }
 }

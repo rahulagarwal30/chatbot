@@ -15,7 +15,7 @@ def main():
     es = Elasticsearch("http://localhost:9200")
 
     #delete all documents from elasticsearch
-    #delete_all_documents_from_es()
+    delete_all_documents_from_es()
 
     #print document count in elastic search
     print(f"Document count in elastic search: {es.count(index='url_content')}")
@@ -42,7 +42,7 @@ def main():
         for index, url in enumerate(urls_to_process):
             print(f"Processing {index + 1}/{total_urls}: {url}")
             save_and_index_url_content(url, index)
-            print(f"Document count in elastic search: {es.count(index='url_content')}")
+            #print(f"Document count in elastic search: {es.count(index='url_content')}")
             
         print("Crawling and indexing completed successfully!")
         
