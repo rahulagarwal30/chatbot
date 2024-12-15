@@ -33,6 +33,7 @@ EXPOSE 5000
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
+#ENV ELASTICSEARCH_URL=http://elasticsearch:9200
 
 # Add healthcheck
 HEALTHCHECK CMD curl --fail http://localhost:5000/ || exit 1

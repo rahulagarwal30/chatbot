@@ -3,6 +3,7 @@ def filter_urls(urls):
     excluded_patterns = [
         'blog',
         'video',
+        'docs',
         'virtual-phone-numbers/pricing',
         'virtual-phone-numbers/coverage',
         'sip-trunking/pricing',

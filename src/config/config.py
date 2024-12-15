@@ -12,3 +12,7 @@ PUSHER_CONFIG = {
     'cluster': os.getenv("PUSHER_CLUSTER"),
     'ssl': True
 }
+
+# Configuration for file operations
+FILE_AGE_DAYS = 2  # Number of days before re-fetching URL content
+MAX_URLS_TO_PROCESS = -1  # -1 means process all URLs, positive number limits the count

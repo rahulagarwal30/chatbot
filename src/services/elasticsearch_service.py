@@ -36,3 +36,4 @@ def perform_vector_search(query):
     })
     
     return results['hits']['hits'][:2]
+
