@@ -20,4 +20,4 @@ def filter_urls(urls):
         url for url in urls 
         if not any(pattern in url.lower() for pattern in excluded_patterns)
     ]
-    return filtered_urls
+    return filtered_urls 

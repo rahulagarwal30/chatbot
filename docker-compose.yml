@@ -1,10 +1,8 @@
-version: '3.8'
-
 services:
   web:
     build: .
     ports:
-      - "5000:5000"
+      - "5100:5000"
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
     depends_on:
@@ -18,7 +16,7 @@ services:
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
-      - "9200:9200"
+      - "9100:9200"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     healthcheck:

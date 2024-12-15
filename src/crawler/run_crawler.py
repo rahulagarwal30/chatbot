@@ -1,26 +1,30 @@
-from sitemap_crawler import crawl_sitemap   
-from url_processor import filter_urls
-from file_operations import save_and_index_url_content, delete_content_files, delete_all_documents_from_es
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent.parent))
+
+# Move all imports here
+from src.crawler.sitemap_crawler import crawl_sitemap   
+from src.crawler.url_processor import filter_urls
+from src.crawler.file_operations import save_and_index_url_content, delete_all_documents_from_es
+from src.config.config import MAX_URLS_TO_PROCESS
 from elasticsearch import Elasticsearch
-from config.config import MAX_URLS_TO_PROCESS
 import time
 
 def main():
     # Initialize Elasticsearch client
     es = Elasticsearch("http://localhost:9200")
-    
+
+    #delete all documents from elasticsearch
+    #delete_all_documents_from_es()
+
+    #print document count in elastic search
+    print(f"Document count in elastic search: {es.count(index='url_content')}")
     # Check if Elasticsearch is running
     if not es.ping():
         print("Error: Could not connect to Elasticsearch. Make sure it's running.")
         return
-
     
     try:
-        # Delete existing content files (optional cleanup)
-        #delete_content_files()
-        #Delete all documents in the index
-        #delete_all_documents_from_es()
-        
         # Get URLs from sitemap
         sitemap_url = "https://www.plivo.com/sitemap.xml"
         print(f"Fetching URLs from {sitemap_url}...")
@@ -38,8 +42,7 @@ def main():
         for index, url in enumerate(urls_to_process):
             print(f"Processing {index + 1}/{total_urls}: {url}")
             save_and_index_url_content(url, index)
-            # Add a small delay to avoid overwhelming the server
-            #time.sleep(1)
+            print(f"Document count in elastic search: {es.count(index='url_content')}")
             
         print("Crawling and indexing completed successfully!")
         

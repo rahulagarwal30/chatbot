@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch
 from sentence_transformers import SentenceTransformer
-from config.config import ELASTICSEARCH_URL
+from src.config.config import ELASTICSEARCH_URL
 
 es = Elasticsearch(ELASTICSEARCH_URL)
 model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
@@ -35,5 +35,4 @@ def perform_vector_search(query):
         }
     })
     
-    return results['hits']['hits'][:2]
-
+    return results['hits']['hits'][:2] 
