@@ -1,4 +1,4 @@
-# Plivo Sitemap Crawler
+# Minimalistic AI-powered chatbot
 
 A robust web crawler designed to process sitemaps, extract content, and index it in Elasticsearch with additional AI-powered processing capabilities.
 
@@ -24,7 +24,7 @@ A robust web crawler designed to process sitemaps, extract content, and index it
 1. Clone the repository:
 
 git clone <repository-url>
-cd plivo-sitemap-crawler
+cd chatbot
 
 2. Create and activate a virtual environment (recommended):
 
@@ -108,20 +108,4 @@ docker run --env-file .env plivo-sitemap-crawler
 ├── requirements.txt
 └── README.md
 ```
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-[Add your license information here]
-
-## Support
-
-For support, please [create an issue](repository-issues-url) or contact [your-contact-information].
 
