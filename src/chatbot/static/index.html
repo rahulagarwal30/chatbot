@@ -1,5 +1,8 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat App</title>
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <link rel="stylesheet" href="/static/css/styles.css">
@@ -7,7 +10,14 @@
 </head>
 <body>
     <div class="chat-container">
+        <div class="chat-header">
+            <h1>Chat Assistant</h1>
+        </div>
         <div class="chat-messages">
+            <div class="refresh-icon"></div>
+            <div class="message received initial-message">
+                Hey there! How can I assist you today?
+            </div>
             <!-- Messages will be inserted here -->
         </div>
         <div class="input-container">
