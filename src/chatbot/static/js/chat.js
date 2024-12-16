@@ -1,5 +1,5 @@
 // Enable pusher logging - don't include this in production
-Pusher.logToConsole = true;
+//Pusher.logToConsole = true;
 
 var pusher_subscriber = new Pusher('7ee8ea85e9273be48499', {
     cluster: 'ap2'
@@ -130,8 +130,12 @@ function sendMessage() {
         // Clear input
         input.value = '';
         
-        // Close keyboard on mobile
-        input.blur();
+        // Only blur on mobile devices
+        if (window.matchMedia('(max-width: 767px)').matches) {
+            input.blur();
+        } else {
+            input.focus(); // Keep focus on desktop
+        }
         
         // Scroll to bottom
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
