@@ -41,7 +41,7 @@ src/
 ## Prerequisites
 
 - Python 3.11+
-- Elasticsearch 8.12+
+- Elasticsearch 7.17+
 - OpenAI API key
 - Pusher account credentials
 
@@ -103,7 +103,7 @@ python src/main.py
 
 5. Access the chat interface:
 ```
-http://localhost:5000
+http://localhost:5001
 ```
 
 ## Components
