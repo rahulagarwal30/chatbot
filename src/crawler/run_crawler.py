@@ -15,7 +15,7 @@ def main():
     es = Elasticsearch("http://localhost:9200")
 
     #delete all documents from elasticsearch
-    delete_all_documents_from_es()
+    #delete_all_documents_from_es()
 
     #print document count in elastic search
     print(f"Document count in elastic search: {es.count(index='url_content')}")

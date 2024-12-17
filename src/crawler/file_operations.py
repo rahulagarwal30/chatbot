@@ -16,28 +16,15 @@ def save_and_index_url_content(url, index):
     content_filename = os.path.join('url_content', f"url_content_{index}.txt")
     url_filename = os.path.join('url_content', f"url_{index}.txt")
     
-    should_fetch = True
     if os.path.exists(content_filename) and os.path.exists(url_filename):
         with open(url_filename, 'r', encoding='utf-8') as f:
             stored_url = f.read().strip()
             
         if url == stored_url:
-            print(f"Skipping {url} - content already exists")
-            should_fetch = False
-    
-    if should_fetch:
-        try:
-            response = requests.get(url)
-            response.raise_for_status()
-            
-            cleaned_content = clean_html_content(response.text)
-            
-            # Save to files
-            with open(content_filename, 'w', encoding='utf-8') as f:
-                f.write(cleaned_content)
-                
-            with open(url_filename, 'w', encoding='utf-8') as f:
-                f.write(url)
+            print(f"Content exists for {url} - loading from file and indexing")
+            # Read existing content
+            with open(content_filename, 'r', encoding='utf-8') as f:
+                cleaned_content = f.read()
             
             # Generate vector embedding
             vector = model.encode(cleaned_content)
@@ -50,10 +37,37 @@ def save_and_index_url_content(url, index):
             }
             
             es.index(index='url_content', id=str(index), document=doc)
-            print(f"Saved and indexed content from {url}")
-                
-        except Exception as e:
-            print(f"Error processing {url}: {e}")
+            print(f"Indexed existing content from {url}")
+            return
+    
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        
+        cleaned_content = clean_html_content(response.text)
+        
+        # Save to files
+        with open(content_filename, 'w', encoding='utf-8') as f:
+            f.write(cleaned_content)
+            
+        with open(url_filename, 'w', encoding='utf-8') as f:
+            f.write(url)
+        
+        # Generate vector embedding
+        vector = model.encode(cleaned_content)
+        
+        # Index in Elasticsearch
+        doc = {
+            'url': url,
+            'content': cleaned_content,
+            'content_vector': vector.tolist()
+        }
+        
+        es.index(index='url_content', id=str(index), document=doc)
+        print(f"Saved and indexed content from {url}")
+            
+    except Exception as e:
+        print(f"Error processing {url}: {e}")
 
 def delete_content_files():
     """Delete the URL content files and their directory"""
