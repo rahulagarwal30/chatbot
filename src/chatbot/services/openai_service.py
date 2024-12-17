@@ -24,10 +24,10 @@ def get_answer_from_openai(query, content):
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a helpful chatbot assistant. Answer the question and format the answer for chat widget based on the provided content."},
-                {"role": "user", "content": f"Based on this content: {truncated_content}\n\nAnswer this question: {query}"}
+                {"role": "user", "content": f"Based on this content: {truncated_content}\n\nAnswer this question: {query} .Use markdown format wherever necessary"}
             ],
             max_tokens=250,
-            temperature=0.2
+            temperature=0.4
         )
         return response.choices[0].message.content
     except Exception as e:

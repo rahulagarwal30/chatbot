@@ -15,22 +15,35 @@ let isRefreshing = false;
 
 // Add at the top of the file
 function markdownToHtml(text) {
-    // Basic markdown conversion
     return text
         // Code blocks with language
-        .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code class="language-$1">$2</code></pre>')
+        .replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => 
+            `<pre><code class="language-${lang || ''}">${code.trim()}</code></pre>`)
         // Inline code
         .replace(/`([^`]+)`/g, '<code>$1</code>')
+        // Headers
+        .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gm, '<h1>$1</h1>')
         // Bold
         .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
         // Italic
         .replace(/\*([^*]+)\*/g, '<em>$1</em>')
         // Links
         .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
-        // Lists
-        .replace(/^\s*-\s+(.+)/gm, '<li>$1</li>')
-        // Paragraphs
-        .split('\n\n').map(para => `<p>${para}</p>`).join('');
+        // Unordered lists
+        .replace(/^\s*[-*+]\s+(.+)/gm, '<li>$1</li>')
+        .split(/(?:\r?\n){2,}/)
+        .map(para => {
+            if (para.startsWith('<li>')) {
+                return `<ul>${para}</ul>`;
+            }
+            if (para.startsWith('<h')) {
+                return para;
+            }
+            return `<p>${para}</p>`;
+        })
+        .join('\n');
 }
 
 // Wait for DOM to load
