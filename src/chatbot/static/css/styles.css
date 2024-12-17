@@ -87,6 +87,62 @@ body {
     overflow-wrap: break-word;
 }
 
+/* Add new markdown styling */
+.message p {
+    margin: 0 0 10px 0;
+}
+
+.message p:last-child {
+    margin-bottom: 0;
+}
+
+.message code {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+.message pre {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 12px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 8px 0;
+}
+
+.message pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+.message strong {
+    font-weight: 600;
+}
+
+.message em {
+    font-style: italic;
+}
+
+.message ul, .message ol {
+    margin: 8px 0;
+    padding-left: 24px;
+}
+
+.message li {
+    margin-bottom: 4px;
+}
+
+.message a {
+    color: #2196F3;
+    text-decoration: none;
+}
+
+.message a:hover {
+    text-decoration: underline;
+}
+
 .initial-message {
     animation: fadeIn 0.5s ease-in;
 }

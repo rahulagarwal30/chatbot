@@ -13,6 +13,26 @@ let touchEnd = 0;
 const REFRESH_THRESHOLD = 150;
 let isRefreshing = false;
 
+// Add at the top of the file
+function markdownToHtml(text) {
+    // Basic markdown conversion
+    return text
+        // Code blocks with language
+        .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code class="language-$1">$2</code></pre>')
+        // Inline code
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        // Bold
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        // Italic
+        .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+        // Links
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+        // Lists
+        .replace(/^\s*-\s+(.+)/gm, '<li>$1</li>')
+        // Paragraphs
+        .split('\n\n').map(para => `<p>${para}</p>`).join('');
+}
+
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', function() {
     const messagesContainer = document.querySelector('.chat-messages');
@@ -74,15 +94,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { passive: true });
     
     channel.bind('event-bot-response', function(data) {
-        // Create new message element
         const messageElement = document.createElement('div');
         messageElement.classList.add('message', 'received');
-        messageElement.textContent = data.message || JSON.stringify(data);
         
-        // Add message to container
+        // Convert markdown to HTML
+        const messageText = data.message || JSON.stringify(data);
+        messageElement.innerHTML = markdownToHtml(messageText);
+        
+        const messagesContainer = document.querySelector('.chat-messages');
         messagesContainer.appendChild(messageElement);
-        
-        // Scroll to bottom
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     });
 
@@ -107,9 +127,9 @@ function sendMessage() {
     const message = input.value.trim();
     
     if (message) {
-        // Create new message element
         const messageElement = document.createElement('div');
         messageElement.classList.add('message', 'sent');
+        // For sent messages, we'll just use text content
         messageElement.textContent = message;
         
         // Add message to container
