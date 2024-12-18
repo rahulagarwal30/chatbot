@@ -3,6 +3,8 @@ import os
 from pathlib import Path
 import logging
 from datetime import datetime
+import threading
+from functools import partial
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from flask import Flask, request, jsonify, send_from_directory
@@ -41,6 +43,16 @@ def search():
     if not query:
         return jsonify({'error': 'No query provided'}), 400
     
+    # Start processing in background thread
+    thread = threading.Thread(
+        target=process_query,
+        args=(query,)
+    )
+    thread.start()
+    
+    return jsonify({'message': 'Query received and being processed'}), 202
+
+def process_query(query):
     try:
         # Log the incoming query
         logging.info(f"Received query: {query}")
@@ -63,7 +75,6 @@ def search():
         # Send answer through Pusher
         send_message(answer)
         
-        return jsonify({'message': 'Search request processed successfully'})
     except Exception as e:
         # Log the error
         logging.error(f"Error processing query '{query}': {str(e)}")
@@ -71,11 +82,9 @@ def search():
         error_traceback = traceback.format_exc()
         logging.error(error_traceback)
         
-        return jsonify({
-            'error': str(e),
-            'error_type': type(e).__name__,
-            'details': error_traceback
-        }), 500
+        # Send error message through Pusher
+        error_message = f"Sorry, an error occurred: {str(e)}"
+        send_message(error_message)
 
 def run_server():
     app.run(host='0.0.0.0', port=5001)
