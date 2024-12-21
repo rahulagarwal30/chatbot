@@ -5,7 +5,7 @@
 ### 1. Code Standards & Reviews
 - Enforce regular peer code reviews via PR processes
 - Implement standardized coding style guides
-- Use automated formatters (ESLint, Prettier, Black)
+- Use automated formatters (ESLint)
 
 ### 2. Testing Strategy
 - Unit tests for components (minimum 80% coverage)
