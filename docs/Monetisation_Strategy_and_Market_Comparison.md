@@ -13,7 +13,7 @@ Monetisation strategy focuses on a freemium model with tiered subscriptions, all
 | Chat Features | Basic website chat | Core features | Enhanced feature set | Full feature suite |
 | Support Level | Community support | Standard support | Expanded coverage | Premium package |
 | Analytics | None | Basic | Standard | Custom |
-| Message Retention | 24-hour | Standard | Extended | Custom |
+| Message Retention | 1 Week | 1 Year | Unlimited | Unlimited |
 | Marketing Messages | Unlimited | Unlimited | Unlimited | Unlimited |
 
 ### Session Definition
