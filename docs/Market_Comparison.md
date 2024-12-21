@@ -48,10 +48,10 @@ There are many chatbot solutions out there, considering similar solutions like t
 | Aspect | Our Solution | Freshworks | SiteGPT | Intercom |
 |---------|--------------|------------|----------|-----------|
 | Setup Time | 30 minutes | 2-3 hours | 1-2 hours | 4-6 hours |
-| Technical Expertise Required | Minimal | Moderate | Low | High |
+| Technical Expertise Required | Minimal | Medium | Low | High |
 | Documentation Quality | Comprehensive | Basic | Limited | Advanced |
 | UI Intuitiveness | High | High | Medium | High |
 | Customer Support | 24/7 | Tiered | Email Only | Tiered |
-| Integration Difficulty | Low | High | Moderate | High |
+| Integration Difficulty | Low | High | Medium | High |
 | Learning Curve | Low | High | Medium | High |
 
