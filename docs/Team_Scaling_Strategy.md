@@ -56,6 +56,7 @@ When internal talent cannot be sourced:
 - All-hands updates + R&R
 - Tech talks
 - Brown bag sessions
+- Quarterly Business Review 
 
 ## 4. Career Development
 
@@ -69,7 +70,7 @@ When internal talent cannot be sourced:
 ### Performance Management
 - Half yearly reviews
 - Clear progression criteria
-- Career/Skills matrix mapping
+- OKR Review and mapping
 - 360-degree feedback
 
 
