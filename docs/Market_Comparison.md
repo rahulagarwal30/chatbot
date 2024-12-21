@@ -28,16 +28,16 @@ There are many chatbot solutions out there, considering similar solutions like t
 | Feature | Our Solution | Freshworks | SiteGPT | Intercom |
 |---------|--------------|------------|----------|-----------|
 | Multi-Channel Support | Native | Limited | Web Only | Add-on |
-| Human Handoff | No | Yes | Yes | Yes |
-| Website Crawl | Yes | No | No | No |
+| Human Handoff | Yes | Yes | Yes | Yes |
+| Website Crawler | Yes | No | No | No |
 | Knowledge Base Integration | Yes | Yes | Yes | Yes |
 | Custom Training | Pro | Enterprise | Enterprise | Enterprise |
-| Analytics | Comprehensive | Basic | Enterprise | Advanced |
+| Analytics | Comprehensive | Basic | Basic | Advanced |
 | API Access | No | Premium | Enterprise | Enterprise |
 | Multilingual Support | 30+ Languages | Limited | 10+ Languages | 20+ Languages |
 | Custom Workflows | No | Limited | No | Yes |
 | Real-time Chat | Yes | Yes | Yes | Yes |
-| Team Collaboration | No | Premium | Basic | Advanced |
+| Team Collaboration | No | Advanced | Basic | Advanced |
 | White Labeling | All Tiers | Premium | Enterprise | Enterprise |
 | Conversation Routing | Advanced | Basic | Limited | Advanced |
 
@@ -49,9 +49,9 @@ There are many chatbot solutions out there, considering similar solutions like t
 |---------|--------------|------------|----------|-----------|
 | Setup Time | 30 minutes | 2-3 hours | 1-2 hours | 4-6 hours |
 | Technical Expertise Required | Minimal | Moderate | Low | High |
-| Documentation Quality | Comprehensive | Basic | Limited | Extensive |
+| Documentation Quality | Comprehensive | Basic | Limited | Advanced |
 | UI Intuitiveness | High | High | Medium | High |
-| Customer Support | 24/7 | Business Hours | Email Only | Tiered |
+| Customer Support | 24/7 | Tiered | Email Only | Tiered |
 | Integration Difficulty | Low | High | Moderate | High |
-| Learning Curve | Shallow | Steep | Moderate | Steep |
+| Learning Curve | Low | High | Medium | High |
 
