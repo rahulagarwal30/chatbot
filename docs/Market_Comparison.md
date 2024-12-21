@@ -51,7 +51,7 @@ There are many chatbot solutions out there, considering similar solutions like t
 | Technical Expertise Required | Minimal | Medium | Low | High |
 | Documentation Quality | Comprehensive | Basic | Limited | Advanced |
 | UI Intuitiveness | High | High | Medium | High |
-| Customer Support | 24/7 | Tiered | Email Only | Tiered |
+| Customer Support | Tiered | Tiered | Email Only | Tiered |
 | Integration Difficulty | Low | High | Medium | High |
 | Learning Curve | Low | High | Medium | High |
 
