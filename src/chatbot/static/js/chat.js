@@ -46,6 +46,19 @@ function markdownToHtml(text) {
         .join('\n');
 }
 
+// Add this function before the DOMContentLoaded event listener
+function getTimeBasedGreeting() {
+    const hour = new Date().getHours();
+    
+    if (hour >= 5 && hour < 12) {
+        return "Good morning";
+    } else if (hour >= 12 && hour < 17) {
+        return "Good afternoon";
+    } else {
+        return "Good evening";
+    }
+}
+
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', function() {
     const messagesContainer = document.querySelector('.chat-messages');
@@ -58,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
         const initialMessage = document.createElement('div');
         initialMessage.classList.add('message', 'received', 'initial-message');
-        initialMessage.textContent = "Hey there! How can I assist you today?";
+        initialMessage.textContent = `${getTimeBasedGreeting()}! How can I assist you today?`;
         messagesContainer.appendChild(initialMessage);
         
         // Ensure initial message is visible

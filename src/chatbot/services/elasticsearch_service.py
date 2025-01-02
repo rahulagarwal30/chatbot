@@ -1,8 +1,12 @@
 from elasticsearch import Elasticsearch
 from sentence_transformers import SentenceTransformer
 from src.config.config import ELASTICSEARCH_URL
+import os
 
-es = Elasticsearch(ELASTICSEARCH_URL)
+es_client = Elasticsearch(
+    os.getenv('ELASTICSEARCH_URL', 'http://localhost:9200')
+)
+
 model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
 def perform_vector_search(query):
@@ -10,7 +14,7 @@ def perform_vector_search(query):
     #print for debugging query vector
     #print(f"Query is: {query} ")
 
-    results = es.search(index="url_content", body={
+    results = es_client.search(index="url_content", body={
         "query": {
             "script_score": {
                 "query": {"match_all": {}},
@@ -38,3 +42,5 @@ def perform_vector_search(query):
     })
     
     return results['hits']['hits'][:2] 
+
+__all__ = ['perform_vector_search', 'es_client'] 

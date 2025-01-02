@@ -26,4 +26,7 @@ python-dotenv==1.0.1
 numpy==1.26.4
 
 # Optional Development Dependencies
-pytest==8.0.2 
+pytest==8.0.2
+
+# User Agents
+user-agents==2.2.0 
