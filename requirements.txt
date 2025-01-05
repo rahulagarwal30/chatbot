@@ -29,4 +29,7 @@ numpy==1.26.4
 pytest==8.0.2
 
 # User Agents
-user-agents==2.2.0 
+user-agents==2.2.0
+
+# Add these if not already present
+uuid==1.30.0

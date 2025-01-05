@@ -43,4 +43,7 @@ ENV PYTHONPATH=/app/src
 HEALTHCHECK CMD curl --fail http://localhost:5000/ || exit 1
 
 # Run the startup script
-CMD ["/app/startup.sh"] 
+CMD ["/app/startup.sh"]
+
+# Install Python dependencies
+RUN pip install user-agents==2.2.0 

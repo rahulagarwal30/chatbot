@@ -6,6 +6,8 @@ from datetime import datetime
 import threading
 from functools import partial
 from user_agents import parse
+import uuid
+from flask import session
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from flask import Flask, request, jsonify, send_from_directory
@@ -33,6 +35,7 @@ logging.basicConfig(
 static_folder = os.path.join(os.path.dirname(__file__), 'static')
 app = Flask(__name__, static_folder=static_folder)
 CORS(app)
+app.secret_key = os.urandom(24)
 
 @app.route('/')
 def index():
@@ -45,6 +48,12 @@ def search():
     if not query:
         return jsonify({'error': 'No query provided'}), 400
     
+    # Get or create session ID
+    session_id = session.get('session_id')
+    if not session_id:
+        session_id = str(uuid.uuid4())
+        session['session_id'] = session_id
+    
     # Get user agent and IP information
     user_agent_string = request.headers.get('User-Agent', 'Unknown')
     user_agent = parse(user_agent_string)
@@ -53,13 +62,13 @@ def search():
     # Start processing in background thread
     thread = threading.Thread(
         target=process_query,
-        args=(query, user_agent, ip_address)
+        args=(query, user_agent, ip_address, session_id)
     )
     thread.start()
     
     return jsonify({'message': 'Query received and being processed'}), 202
 
-def process_query(query, user_agent, ip_address):
+def process_query(query, user_agent, ip_address, session_id):
     try:
         # Start location lookup in background thread
         location_thread = threading.Thread(
@@ -82,7 +91,7 @@ def process_query(query, user_agent, ip_address):
             combined_content += f"\n\nDocument {i}: {content}"
         
         # Get answer from OpenAI
-        answer = get_answer_from_openai(query, combined_content)
+        answer = get_answer_from_openai(query, combined_content, session_id)
         
         # Log the answer
         logging.info(f"Answer for query '{query}': {answer}")

@@ -16,3 +16,7 @@ PUSHER_CONFIG = {
 # Configuration for file operations
 FILE_AGE_DAYS = 2  # Number of days before re-fetching URL content
 MAX_URLS_TO_PROCESS = -1  # -1 means process all URLs, positive number limits the count
+
+# Add these with your other configuration variables
+SESSION_TIMEOUT_MINUTES = int(os.getenv('SESSION_TIMEOUT_MINUTES', '60'))
+SESSION_MESSAGE_LIMIT = int(os.getenv('SESSION_MESSAGE_LIMIT', '10'))

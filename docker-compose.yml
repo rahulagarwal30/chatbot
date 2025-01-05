@@ -5,7 +5,9 @@ services:
       - "5100:5000"
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
-    depends_on:
+      - SESSION_TIMEOUT_MINUTES=120
+      - SESSION_MESSAGE_LIMIT=15
+    depends_on: Om a
       elasticsearch:
         condition: service_healthy
 

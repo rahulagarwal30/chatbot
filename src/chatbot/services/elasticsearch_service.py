@@ -12,7 +12,7 @@ model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 def perform_vector_search(query):
     query_vector = model.encode(query)
     #print for debugging query vector
-    #print(f"Query is: {query} ")
+    print(f"Query is: {query} ")
 
     results = es_client.search(index="url_content", body={
         "query": {

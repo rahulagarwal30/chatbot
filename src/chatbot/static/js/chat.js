@@ -59,6 +59,16 @@ function getTimeBasedGreeting() {
     }
 }
 
+// Add this at the beginning of your chat.js file
+function getDeviceId() {
+    let deviceId = localStorage.getItem('deviceId');
+    if (!deviceId) {
+        deviceId = 'device_' + Math.random().toString(36).slice(2, 11);
+        localStorage.setItem('deviceId', deviceId);
+    }
+    return deviceId;
+}
+
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', function() {
     const messagesContainer = document.querySelector('.chat-messages');
@@ -148,42 +158,59 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 300);
 });
 
-function sendMessage() {
-    const input = document.getElementById('message-input');
-    const message = input.value.trim();
+// Update your message sending function to include the device ID
+async function sendMessage() {
+    const messageInput = document.getElementById('message-input');
+    const message = messageInput.value.trim();
     
-    if (message) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message', 'sent');
-        // For sent messages, we'll just use text content
-        messageElement.textContent = message;
+    if (!message) return;  // Don't send empty messages
+    
+    try {
+        // Add user message to chat immediately
+        addMessageToChat('sent', message);
         
-        // Add message to container
-        const messagesContainer = document.querySelector('.chat-messages');
-        messagesContainer.appendChild(messageElement);
+        // Clear input right after sending
+        messageInput.value = '';
         
-        // Send message to search endpoint
-        fetch('/query', {
+        const response = await fetch('/query', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-Device-ID': getDeviceId()
             },
-            body: JSON.stringify({
-                message: message
-            })
+            body: JSON.stringify({ message: message })
         });
         
-        // Clear input
-        input.value = '';
+        // Log response details for debugging
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
         
-        // Only blur on mobile devices
-        if (window.matchMedia('(max-width: 767px)').matches) {
-            input.blur();
-        } else {
-            input.focus(); // Keep focus on desktop
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Server response:', errorText);
+            throw new Error(`Server error: ${response.status} - ${errorText}`);
         }
         
-        // Scroll to bottom
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        // Wait for the bot response to come through Pusher
+        
+    } catch (error) {
+        console.error('Full error details:', error);
+        addMessageToChat('received', 'Sorry, there was an error processing your message. Please try again.');
     }
+}
+
+function addMessageToChat(type, message) {
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message', type);
+    
+    // Convert markdown to HTML for received messages
+    if (type === 'received') {
+        messageElement.innerHTML = markdownToHtml(message);
+    } else {
+        messageElement.textContent = message;
+    }
+    
+    const messagesContainer = document.querySelector('.chat-messages');
+    messagesContainer.appendChild(messageElement);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
