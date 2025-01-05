@@ -1,15 +1,17 @@
 # Minimalistic AI-powered Chatbot
 
-A robust web crawler and chatbot system that processes sitemaps, extracts content, indexes it in Elasticsearch, and provides AI-powered responses through a chat interface.
+A robust web crawler and chatbot system that processes sitemaps, extracts content, indexes it in Elasticsearch, and provides AI-powered responses through a chat interface. The system supports multiple concurrent users and maintains conversation context.
 
-## Features
+## Key Features
 
-- Sitemap crawling and content extraction
-- HTML content cleaning and processing
-- Elasticsearch integration for vector search
-- OpenAI integration for intelligent responses
-- Real-time chat updates via Pusher
-- Web interface for chat interactions
+- 🕷️ Intelligent web crawling with sitemap processing
+- 🧹 Advanced HTML content cleaning and extraction
+- 🔍 Vector search powered by Elasticsearch
+- 🤖 OpenAI GPT integration for natural conversations
+- ⚡ Real-time chat updates via Pusher
+- 👥 Multi-user support with session management
+- 📝 Conversation context maintenance
+- 📍 Location-based services integration
 
 ## Components
 
@@ -18,6 +20,8 @@ A robust web crawler and chatbot system that processes sitemaps, extracts conten
 - **Elasticsearch**: Stores and indexes content with vector search capabilities
 - **OpenAI Integration**: Provides intelligent responses to user queries
 - **Pusher**: Enables real-time chat updates
+- **Session Service**: Manages user sessions and chat history
+- **User Service**: Handles user-specific operations and data
 
 ## Architecture
 
@@ -92,6 +96,7 @@ sequenceDiagram
     PlivoCrawler->>Elasticsearch: 9. Index cleaned data (converted to vectors)
     Elasticsearch-->>PlivoCrawler: 10. Confirm data indexed
 ```
+
 ## Features
 
 - Sitemap crawling and content extraction
@@ -105,17 +110,19 @@ sequenceDiagram
 
 ```
 src/
-├── chatbot/                          # Chatbot module
-│   ├── services/                     # Service integrations
-│   │   ├── elasticsearch_service.py  # Vector search implementation
-│   │   ├── openai_service.py        # GPT integration for responses
-│   │   └── pusher_service.py        # Real-time messaging
-│   └── static/                      # Web interface assets
-│       ├── css/
-│       │   └── styles.css           # Chat UI styling
-│       ├── js/
-│       │   └── chat.js             # Chat frontend logic
-│       └── index.html              # Chat interface HTML
+├── chatbot/
+│   ├── services/
+│   │   ├── elasticsearch_service.py
+│   │   ├── location_service.py
+│   │   ├── openai_service.py
+│   │   ├── pusher_service.py
+│   │   ├── session_service.py
+│   │   └── user_service.py
+│   ├── static/
+│   │   ├── css/
+│   │   ├── js/
+│   │   └── index.html
+│   └── main.py
 ├── config/
 │   └── config.py                   # Environment and app configuration
 ├── crawler/                        # Web crawler module
@@ -134,6 +141,7 @@ src/
 - Elasticsearch 7.17+
 - OpenAI API key
 - Pusher account credentials
+
 
 ## Setup and Installation
 
@@ -170,6 +178,7 @@ PUSHER_APP_ID=your_app_id
 PUSHER_KEY=your_key
 PUSHER_SECRET=your_secret
 PUSHER_CLUSTER=your_cluster
+REDIS_URL=redis://localhost:6379
 ```
 
 ## Running the Application

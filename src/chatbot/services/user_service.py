@@ -1,28 +1,58 @@
-import requests
+from datetime import datetime
+from user_agents import parse
+import uuid
 import logging
+from .location_service import get_location_from_ip
 
-def get_location_from_ip(ip_address):
-    try:
-        # Skip localhost/private IPs
-        if ip_address in ('127.0.0.1', 'localhost') or ip_address.startswith(('192.168.', '10.', '172.')):
-            return 'Local development'
-            
-        # Use ipapi.co with rate limit handling
-        response = requests.get(f'https://ipapi.co/{ip_address}/json/')
-        if response.status_code == 200:
-            data = response.json()
-            # Check for rate limiting error
-            if data.get('error') and 'rate limit' in data.get('reason', '').lower():
-                return 'Rate limit exceeded'
-            city = data.get('city', 'Unknown City')
-            region = data.get('region', 'Unknown Region')
-            country = data.get('country_name', 'Unknown Country')
-            return f"{city}, {region}, {country}"
-        return 'Location not found'
-        
-    except Exception as e:
-        logging.error(f"Error getting location for IP {ip_address}: {str(e)}")
-        return 'Location lookup failed'
+def collect_user_info(request, session, logger=None):
+    """Collect and log user information from request"""
+    user_info = {
+        'query': request.json.get('message'),
+        'user_agent': parse(request.headers.get('User-Agent', 'Unknown')),
+        'ip_address': request.headers.get('X-Forwarded-For', request.remote_addr),
+        'timestamp': datetime.now().isoformat(),
+    }
+
+    # Get or create session ID
+    session_id = session.get('session_id')
+    if not session_id:
+        session_id = str(uuid.uuid4())
+        session['session_id'] = session_id
+    user_info['session_id'] = session_id
+
+    # Get location if not already in session
+    if 'location' not in session:
+        try:
+            location = get_location_from_ip(user_info['ip_address'])
+            session['location'] = location
+            user_info['location'] = location
+        except Exception as e:
+            if logger:
+                logger.error(f"Error getting location for IP {user_info['ip_address']}: {str(e)}")
+            user_info['location'] = 'Unknown'
+    else:
+        user_info['location'] = session['location']
+
+    # Log all user information together
+    log_message = (
+        f"Query: {user_info['query']} | "
+        f"IP: {user_info['ip_address']} | "
+        f"Location: {user_info['location']} | "
+        f"User Agent: {user_info['user_agent']} | "
+        f"Session ID: {user_info['session_id']}"
+    )
+    if logger:
+        logger.info(log_message)
+    
+    # Log detailed user info
+    log_user_info(
+        query=user_info['query'],
+        user_agent=user_info['user_agent'],
+        ip_address=user_info['ip_address'],
+        logger=logger
+    )
+
+    return user_info
 
 def log_user_info(query: str, user_agent, ip_address, logger):
     """Log user information including device, location, and query details."""
@@ -34,4 +64,4 @@ def log_user_info(query: str, user_agent, ip_address, logger):
     logger.info(f"User IP: {ip_address}")
     logger.info(f"Device Info: {device_info}")
 
-__all__ = ['get_location_from_ip', 'log_user_info'] 
+__all__ = ['collect_user_info', 'log_user_info'] 

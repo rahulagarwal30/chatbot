@@ -4,8 +4,6 @@ from pathlib import Path
 import logging
 from datetime import datetime
 import threading
-from functools import partial
-from user_agents import parse
 import uuid
 from flask import session
 sys.path.append(str(Path(__file__).parent.parent.parent))
@@ -13,7 +11,7 @@ sys.path.append(str(Path(__file__).parent.parent.parent))
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from src.chatbot.services.elasticsearch_service import perform_vector_search, es_client
-from src.chatbot.services.user_service import get_location_from_ip, log_user_info
+from src.chatbot.services.user_service import collect_user_info
 from src.chatbot.services.openai_service import get_answer_from_openai
 from src.chatbot.services.pusher_service import send_message
 from src.chatbot.services.session_service import session_manager
@@ -49,40 +47,21 @@ def search():
     if not query:
         return jsonify({'error': 'No query provided'}), 400
     
-    # Get or create session ID
-    session_id = session.get('session_id')
-    if not session_id:
-        session_id = str(uuid.uuid4())
-        session['session_id'] = session_id
+    # Collect and log user information
+    user_info = collect_user_info(request, session, logger=logging)
     
-    # Get user agent and IP information
-    user_agent_string = request.headers.get('User-Agent', 'Unknown')
-    user_agent = parse(user_agent_string)
-    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
-
-    # Start processing in background thread
+    # Start query processing in background thread
     thread = threading.Thread(
         target=process_query,
-        args=(query, user_agent, ip_address, session_id)
+        args=(query, user_info['session_id'])
     )
     thread.start()
     
     return jsonify({'message': 'Query received and being processed'}), 202
 
-def process_query(query, user_agent, ip_address, session_id):
+def process_query(query, session_id):
     try:
-        # Start location lookup in background thread
-        location_thread = threading.Thread(
-            target=process_location_info,
-            args=(query, user_agent, ip_address)
-        )
-        location_thread.daemon = True  # Make thread daemon so it doesn't block program exit
-        location_thread.start()
-        
-        # Pass the logger directly
-        log_user_info(query=query, user_agent=user_agent, ip_address=ip_address, logger=logging)
-        
-        # Continue with rest of processing
+        # Process query
         search_results = perform_vector_search(query)
         
         # Combine content from top results
@@ -111,14 +90,6 @@ def process_query(query, user_agent, ip_address, session_id):
         error_message = f"Sorry, an error occurred: {str(e)}"
         send_message(error_message)
 
-def process_location_info(query, user_agent, ip_address):
-    try:
-        location = get_location_from_ip(ip_address)
-        # Log the location information separately
-        logging.info(f"Location for IP {ip_address}: {location}")
-    except Exception as e:
-        logging.error(f"Error getting location for IP {ip_address}: {str(e)}")
-
 def run_server():
     app.run(host='0.0.0.0', port=5001)
 
@@ -128,6 +99,7 @@ def clear_session():
         session_id = session.get('session_id')
         if session_id:
             session_manager.clear_session(session_id)
+            session.clear()  # Clear Flask session data including stored location
             logging.info(f"Cleared session for {session_id}")
         return jsonify({'status': 'success'}), 200
     except Exception as e:

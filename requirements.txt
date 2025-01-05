@@ -16,7 +16,7 @@ elasticsearch==8.11.1
 pusher==3.3.2
 
 # HTTP Requests
-requests==2.31.0
+requests>=2.31.0
 
 # XML Processing (for sitemap)
 lxml==5.1.0
