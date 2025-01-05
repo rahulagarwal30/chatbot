@@ -69,6 +69,25 @@ function getDeviceId() {
     return deviceId;
 }
 
+// Add this function at the top with other function declarations
+async function clearSession() {
+    try {
+        await fetch('/clear_session', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.error('Error clearing session:', error);
+    }
+}
+
+// Add event listener for page refresh/unload
+window.addEventListener('beforeunload', async (event) => {
+    await clearSession();
+});
+
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', function() {
     const messagesContainer = document.querySelector('.chat-messages');
@@ -110,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, { passive: true });
 
-    messagesContainer.addEventListener('touchend', function() {
+    messagesContainer.addEventListener('touchend', async function() {
         if (isRefreshing) return;
         
         const distance = touchEnd - touchStart;
@@ -119,8 +138,13 @@ document.addEventListener('DOMContentLoaded', function() {
             isRefreshing = true;
             messagesContainer.classList.add('refreshing');
             
-            // Perform refresh
-            window.location.reload();
+            try {
+                await clearSession();
+                window.location.reload();
+            } catch (error) {
+                console.error('Error during refresh:', error);
+                window.location.reload();
+            }
         } else {
             messagesContainer.classList.remove('pull-to-refresh');
         }

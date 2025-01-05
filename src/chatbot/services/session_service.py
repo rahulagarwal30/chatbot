@@ -125,6 +125,20 @@ class SessionManager:
             logging.error(f"Error creating session {session_id}: {str(e)}")
             raise SessionError(f"Failed to create session: {str(e)}")
 
+    def clear_session(self, session_id: str) -> None:
+        """Clear all messages from a session"""
+        if not isinstance(session_id, str):
+            raise SessionError("Session ID must be a string")
+        
+        try:
+            with self.lock:
+                if session_id in self.sessions:
+                    self.sessions[session_id]['messages'] = []
+                    self.sessions[session_id]['last_access'] = datetime.now()
+        except Exception as e:
+            logging.error(f"Error clearing session {session_id}: {str(e)}")
+            raise SessionError(f"Failed to clear session: {str(e)}")
+
 # Create singleton instance with default configuration
 try:
     session_manager = SessionManager()

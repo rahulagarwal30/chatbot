@@ -16,6 +16,7 @@ from src.chatbot.services.elasticsearch_service import perform_vector_search, es
 from src.chatbot.services.user_service import get_location_from_ip, log_user_info
 from src.chatbot.services.openai_service import get_answer_from_openai
 from src.chatbot.services.pusher_service import send_message
+from src.chatbot.services.session_service import session_manager
 
 # Set up logging - moved to project root
 project_root = Path(__file__).parent.parent.parent
@@ -120,6 +121,27 @@ def process_location_info(query, user_agent, ip_address):
 
 def run_server():
     app.run(host='0.0.0.0', port=5001)
+
+@app.route('/clear_session', methods=['POST', 'GET'])
+def clear_session():
+    try:
+        session_id = session.get('session_id')
+        if session_id:
+            session_manager.clear_session(session_id)
+            logging.info(f"Cleared session for {session_id}")
+        return jsonify({'status': 'success'}), 200
+    except Exception as e:
+        logging.error(f"Error clearing session: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.before_request
+def clear_session_on_refresh():
+    """Clear session when page is refreshed"""
+    if request.endpoint == 'index':  # Only for main page loads
+        session_id = session.get('session_id')
+        if session_id:
+            session_manager.clear_session(session_id)
+            logging.info(f"Cleared session on page refresh for {session_id}")
 
 if __name__ == '__main__':
     run_server() 
