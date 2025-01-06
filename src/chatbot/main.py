@@ -15,6 +15,7 @@ from src.chatbot.services.user_service import collect_user_info
 from src.chatbot.services.openai_service import get_answer_from_openai
 from src.chatbot.services.pusher_service import send_message
 from src.chatbot.services.session_service import session_manager
+from src.config.config import PUSHER_CHANNEL
 
 # Set up logging - moved to project root
 project_root = Path(__file__).parent.parent.parent
@@ -38,7 +39,10 @@ app.secret_key = os.urandom(24)
 
 @app.route('/')
 def index():
-    return send_from_directory(static_folder, 'index.html')
+    with open(os.path.join(static_folder, 'index.html'), 'r') as f:
+        template = f.read()
+        rendered = template.replace('{{ PUSHER_CHANNEL }}', PUSHER_CHANNEL)
+    return rendered
 
 @app.route('/query', methods=['POST'])
 def search():

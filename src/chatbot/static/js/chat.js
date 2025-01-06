@@ -5,7 +5,10 @@ var pusher_subscriber = new Pusher('7ee8ea85e9273be48499', {
     cluster: 'ap2'
 });
 
-var channel = pusher_subscriber.subscribe('my-channel');
+// Get channel name from server or use default
+const channelName = window.PUSHER_CHANNEL || 'dev-channel';
+console.log('Subscribing to Pusher channel:', channelName);
+var channel = pusher_subscriber.subscribe(channelName);
 
 // Variables for pull to refresh
 let touchStart = 0;

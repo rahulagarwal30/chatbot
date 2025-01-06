@@ -6,7 +6,6 @@
     <title>Chat App</title>
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <link rel="stylesheet" href="/static/css/styles.css">
-    <script src="/static/js/chat.js"></script>
 </head>
 <body>
     <div class="chat-container">
@@ -25,5 +24,9 @@
             <button id="send-button">Send</button>
         </div>
     </div>
+    <script>
+        window.PUSHER_CHANNEL = '{{ PUSHER_CHANNEL }}';  // This will be populated by the backend
+    </script>
+    <script src="/static/js/chat.js"></script>
 </body>
 </html>
