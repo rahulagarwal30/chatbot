@@ -15,7 +15,7 @@ from src.chatbot.services.user_service import collect_user_info
 from src.chatbot.services.openai_service import get_answer_from_openai
 from src.chatbot.services.pusher_service import send_message
 from src.chatbot.services.session_service import session_manager
-from src.config.config import PUSHER_CHANNEL
+
 
 # Set up logging - moved to project root
 project_root = Path(__file__).parent.parent.parent
@@ -41,13 +41,13 @@ app.secret_key = os.urandom(24)
 def index():
     with open(os.path.join(static_folder, 'index.html'), 'r') as f:
         template = f.read()
-        rendered = template.replace('{{ PUSHER_CHANNEL }}', PUSHER_CHANNEL)
-    return rendered
+    return template
 
 @app.route('/query', methods=['POST'])
 def search():
     data = request.json
     query = data.get('message')
+    device_id = data.get('device_id')
     if not query:
         return jsonify({'error': 'No query provided'}), 400
     
@@ -57,14 +57,17 @@ def search():
     # Start query processing in background thread
     thread = threading.Thread(
         target=process_query,
-        args=(query, user_info['session_id'])
+        args=(query, user_info['session_id'], device_id)
     )
     thread.start()
     
     return jsonify({'message': 'Query received and being processed'}), 202
 
-def process_query(query, session_id):
+def process_query(query, session_id, device_id):
     try:
+        logging.info(f"Device ID: {device_id}")
+        logging.info(f"Session ID: {session_id}")
+
         # Process query
         search_results = perform_vector_search(query)
         
@@ -81,7 +84,7 @@ def process_query(query, session_id):
         logging.info(f"Answer for query '{query}': {answer}")
         
         # Send answer through Pusher
-        send_message(answer)
+        send_message(answer, device_id)
         
     except Exception as e:
         # Log the error
@@ -92,7 +95,7 @@ def process_query(query, session_id):
         
         # Send error message through Pusher
         error_message = f"Sorry, an error occurred: {str(e)}"
-        send_message(error_message)
+        send_message(error_message, device_id)
 
 def run_server():
     app.run(host='0.0.0.0', port=5001)

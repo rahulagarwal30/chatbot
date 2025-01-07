@@ -5,8 +5,9 @@ var pusher_subscriber = new Pusher('7ee8ea85e9273be48499', {
     cluster: 'ap2'
 });
 
-// Get channel name from server or use default
-const channelName = window.PUSHER_CHANNEL || 'dev-channel';
+// Get channel name based on device ID
+const deviceId = getDeviceId();
+const channelName = `my-${deviceId}`;  
 console.log('Subscribing to Pusher channel:', channelName);
 var channel = pusher_subscriber.subscribe(channelName);
 
@@ -202,10 +203,12 @@ async function sendMessage() {
         const response = await fetch('/query', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'X-Device-ID': getDeviceId()
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ message: message })
+            body: JSON.stringify({ 
+                message: message,
+                device_id: getDeviceId()  // Add device_id to the request body
+            })
         });
         
         // Log response details for debugging
