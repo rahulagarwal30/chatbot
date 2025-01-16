@@ -4,7 +4,7 @@ Flask-CORS==4.0.0
 gunicorn==21.2.0
 
 # HTTP Client
-httpx==0.24.1  # Specific version that works with OpenAI 1.12.0
+#httpx==0.24.1  # Specific version that works with OpenAI 1.12.0
 
 # AI and Machine Learning
 sentence-transformers==2.5.1
